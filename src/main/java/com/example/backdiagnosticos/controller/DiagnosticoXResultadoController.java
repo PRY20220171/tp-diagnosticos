@@ -25,6 +25,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/diagnosticosxresultados")
 public class DiagnosticoXResultadoController {
+    /*
     @Autowired
     private DiagnosticoXResultadoService diagnosticoxresultadoService;
 
@@ -77,7 +78,7 @@ public class DiagnosticoXResultadoController {
         }
         return ResponseEntity.ok(diagnosticoxresultadoDelete);
     }
-
+/*
     @Autowired
     ProducerService rabbitMQSender;
 
@@ -86,6 +87,8 @@ public class DiagnosticoXResultadoController {
         rabbitMQSender.sendMsg(new DiagnosticoXResultado());
         return "Message sent to the RabbitMQ JavaInUse Successfully";
     }
+
+ */
 
 
 

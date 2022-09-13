@@ -1,6 +1,5 @@
 package com.example.backdiagnosticos.service.impl;
 
-import com.example.backdiagnosticos.entity.Diagnostico;
 import com.example.backdiagnosticos.service.ConsumerService;
 import com.example.backdiagnosticos.service.DiagnosticoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +10,6 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -28,19 +26,18 @@ public class ConsumerServiceImpl implements ConsumerService {
                     exchange = @Exchange(value = "${spring.rabbitmq.exchange}"),
                     key = "${spring.rabbitmq.routingkey}")
     )
-    public Object consumerMessage(UUID proId) throws AmqpIOException {
+    public Object consumerMessage(String objId) throws AmqpIOException {
         System.out.println("=============== Message ==================");
-        System.out.println(proId);
+        System.out.println(objId);
         System.out.println("==========================================");
-        Diagnostico product= diagnosticoService.getDiagnostico(proId);
-        if(product==null){
+        Object obj= diagnosticoService.getDiagnostico(UUID.fromString(objId));
+        if(obj==null){
             return null;
         }
         else{
-            ObjectMapper obj = new ObjectMapper();
+            ObjectMapper objmap = new ObjectMapper();
             try {
-                String pro = obj.writeValueAsString(product);
-                return pro;
+                return objmap.writeValueAsString(obj);
             }catch(JsonProcessingException e){
                 return null;
             }

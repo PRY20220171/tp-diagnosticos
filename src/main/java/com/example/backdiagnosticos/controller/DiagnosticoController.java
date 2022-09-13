@@ -77,7 +77,7 @@ public class DiagnosticoController {
         }
         return ResponseEntity.ok(diagnosticoDelete);
     }
-
+/*
     @Autowired
     ProducerService rabbitMQSender;
 
@@ -86,6 +86,7 @@ public class DiagnosticoController {
         rabbitMQSender.sendMsg(new Diagnostico());
         return "Message sent to the RabbitMQ JavaInUse Successfully";
     }
+ */
 
 
 

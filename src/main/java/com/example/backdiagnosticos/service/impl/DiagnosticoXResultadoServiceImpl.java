@@ -1,5 +1,6 @@
 package com.example.backdiagnosticos.service.impl;
 
+import com.example.backdiagnosticos.entity.DiagnosticoResultadoKey;
 import com.example.backdiagnosticos.entity.DiagnosticoXResultado;
 import com.example.backdiagnosticos.repository.DiagnosticoXResultadoRepository;
 import com.example.backdiagnosticos.service.DiagnosticoXResultadoService;
@@ -18,10 +19,22 @@ public class DiagnosticoXResultadoServiceImpl implements DiagnosticoXResultadoSe
     public List<DiagnosticoXResultado> findDiagnosticoXResultadoAll() {
         return (List<DiagnosticoXResultado>) diagnosticoxresultadoRepository.findAll();
     }
+    @Override
+    public List<DiagnosticoXResultado> getDiagnosticoXResultadoByIdDiagnostico(UUID iddiagnostico){
+        return diagnosticoxresultadoRepository.findAllByDiagnosticoResultadoKey_Iddiagnostico(iddiagnostico);
+    }
+    @Override
+    public List<DiagnosticoXResultado> getDiagnosticoXResultadoByIdResultado(UUID idresultado){
+        return diagnosticoxresultadoRepository.findAllByDiagnosticoResultadoKey_Idresultado(idresultado);
+    }
+    @Override
+    public DiagnosticoXResultado getDiagnosticoXResultado(UUID iddiagnostico,UUID idprueba){
+        return diagnosticoxresultadoRepository.findById(new DiagnosticoResultadoKey(iddiagnostico,idprueba)).orElse(null);
+    }
 
     @Override
-    public DiagnosticoXResultado getDiagnosticoXResultado(UUID id) {
-        return diagnosticoxresultadoRepository.findById(id).orElse(null);
+    public DiagnosticoXResultado getDiagnosticoXResultado(DiagnosticoResultadoKey key) {
+        return diagnosticoxresultadoRepository.findById(key).orElse(null);
     }
 
     @Override
@@ -32,20 +45,31 @@ public class DiagnosticoXResultadoServiceImpl implements DiagnosticoXResultadoSe
 
     @Override
     public DiagnosticoXResultado updateDiagnosticoXResultado(DiagnosticoXResultado diagnosticoxresultado) {
-        DiagnosticoXResultado diagnosticoxresultadoDB = this.getDiagnosticoXResultado(diagnosticoxresultado.getId());
+        DiagnosticoXResultado diagnosticoxresultadoDB = this.getDiagnosticoXResultado(diagnosticoxresultado.getDiagnosticoResultadoKey());
         if (diagnosticoxresultadoDB == null) {
             return null;
         }
-        //Actualizamos los valores del diagnosticoxresultado:
-        diagnosticoxresultadoDB.setIddiagnostico(diagnosticoxresultado.getIddiagnostico());
-        diagnosticoxresultadoDB.setIdresultado(diagnosticoxresultado.getIdresultado());
         diagnosticoxresultadoDB.setMotivo(diagnosticoxresultado.getMotivo());
         return diagnosticoxresultadoRepository.save(diagnosticoxresultado);
     }
 
     @Override
-    public String deleteDiagnosticoXResultado(UUID id) {
-        DiagnosticoXResultado diagnosticoxresultadoDB = this.getDiagnosticoXResultado(id);
+    public String deleteDiagnosticoXResultado(UUID iddiagnostico,UUID idresultado) {
+        DiagnosticoXResultado diagnosticoxresultadoDB = this.getDiagnosticoXResultado(iddiagnostico,idresultado);
+        if (diagnosticoxresultadoDB == null) {
+            return null;
+        }
+        try{
+            diagnosticoxresultadoRepository.delete(diagnosticoxresultadoDB);
+        }catch (Exception e){
+            return "ERROR INTERNO";
+        }
+        return "ELIMINADO CON EXITO";
+    }
+
+    @Override
+    public String deleteDiagnosticoXResultado(DiagnosticoResultadoKey key) {
+        DiagnosticoXResultado diagnosticoxresultadoDB = this.getDiagnosticoXResultado(key);
         if (diagnosticoxresultadoDB == null) {
             return null;
         }

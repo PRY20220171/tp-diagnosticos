@@ -1,5 +1,6 @@
 package com.example.backdiagnosticos.service.impl;
 
+import com.example.backdiagnosticos.entity.DiagnosticoPruebaKey;
 import com.example.backdiagnosticos.entity.DiagnosticoXPrueba;
 import com.example.backdiagnosticos.repository.DiagnosticoXPruebaRepository;
 import com.example.backdiagnosticos.service.DiagnosticoXPruebaService;
@@ -18,10 +19,22 @@ public class DiagnosticoXPruebaServiceImpl implements DiagnosticoXPruebaService 
     public List<DiagnosticoXPrueba> findDiagnosticoXPruebaAll() {
         return (List<DiagnosticoXPrueba>) diagnosticoxpruebaRepository.findAll();
     }
+    @Override
+    public List<DiagnosticoXPrueba> getDiagnosticoXPruebaByIdDiagnostico(UUID iddiagnostico){
+        return diagnosticoxpruebaRepository.findAllByDiagnosticoPruebaKey_Iddiagnostico(iddiagnostico);
+    }
+    @Override
+    public List<DiagnosticoXPrueba> getDiagnosticoXPruebaByIdPrueba(UUID idprueba){
+        return diagnosticoxpruebaRepository.findAllByDiagnosticoPruebaKey_Idprueba(idprueba);
+    }
 
     @Override
-    public DiagnosticoXPrueba getDiagnosticoXPrueba(UUID id) {
+    public DiagnosticoXPrueba getDiagnosticoXPrueba(DiagnosticoPruebaKey id) {
         return diagnosticoxpruebaRepository.findById(id).orElse(null);
+    }
+    @Override
+    public DiagnosticoXPrueba getDiagnosticoXPrueba(UUID iddiagnostico,UUID idprueba) {
+        return diagnosticoxpruebaRepository.findById(new DiagnosticoPruebaKey(iddiagnostico,idprueba)).orElse(null);
     }
 
     @Override
@@ -32,20 +45,18 @@ public class DiagnosticoXPruebaServiceImpl implements DiagnosticoXPruebaService 
 
     @Override
     public DiagnosticoXPrueba updateDiagnosticoXPrueba(DiagnosticoXPrueba diagnosticoxprueba) {
-        DiagnosticoXPrueba diagnosticoxpruebaDB = this.getDiagnosticoXPrueba(diagnosticoxprueba.getId());
+        DiagnosticoXPrueba diagnosticoxpruebaDB = this.getDiagnosticoXPrueba(diagnosticoxprueba.getDiagnosticoPruebaKey());
         if (diagnosticoxpruebaDB == null) {
             return null;
         }
         //Actualizamos los valores del diagnosticoxprueba:
-        diagnosticoxpruebaDB.setIddiagnostico(diagnosticoxprueba.getIddiagnostico());
-        diagnosticoxpruebaDB.setIdprueba(diagnosticoxprueba.getIdprueba());
         diagnosticoxpruebaDB.setMotivo(diagnosticoxprueba.getMotivo());
         return diagnosticoxpruebaRepository.save(diagnosticoxprueba);
     }
 
     @Override
-    public String deleteDiagnosticoXPrueba(UUID id) {
-        DiagnosticoXPrueba diagnosticoxpruebaDB = this.getDiagnosticoXPrueba(id);
+    public String deleteDiagnosticoXPrueba(DiagnosticoPruebaKey key) {
+        DiagnosticoXPrueba diagnosticoxpruebaDB = this.getDiagnosticoXPrueba(key);
         if (diagnosticoxpruebaDB == null) {
             return null;
         }
@@ -56,11 +67,17 @@ public class DiagnosticoXPruebaServiceImpl implements DiagnosticoXPruebaService 
         }
         return "ELIMINADO CON EXITO";
     }
-/*
     @Override
-    public List<DiagnosticoXPrueba> findAllByIddiagnosticoAndIdprueba(UUID iddiagnostico, UUID idprueba){
-        return diagnosticoxpruebaRepository.findAllByIddiagnosticoAndIdprueba("DNI", dni.toString());
+    public String deleteDiagnosticoXPrueba(UUID iddiagnostico,UUID idprueba) {
+        DiagnosticoXPrueba diagnosticoxpruebaDB = this.getDiagnosticoXPrueba(iddiagnostico,idprueba);
+        if (diagnosticoxpruebaDB == null) {
+            return null;
+        }
+        try{
+            diagnosticoxpruebaRepository.delete(diagnosticoxpruebaDB);
+        }catch (Exception e){
+            return "ERROR INTERNO";
+        }
+        return "ELIMINADO CON EXITO";
     }
-
- */
 }
