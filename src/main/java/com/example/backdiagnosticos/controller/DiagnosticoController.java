@@ -28,7 +28,7 @@ public class DiagnosticoController {
     @Autowired
     private DiagnosticoService diagnosticoService;
 
-    @ApiOperation(value="Obtener un producto por su ID", notes="Provee un mecanismo para obtener todos los datos del diagnostico del paciente por su ID")
+    @ApiOperation(value="Obtener un diagnostico por su ID", notes="Provee un mecanismo para obtener todos los datos del diagnostico del paciente por su ID")
     @ApiResponses(value= {
             @ApiResponse(code=200, message="OK", response=Diagnostico.class),
             @ApiResponse(code=404, message="Not Found", response= ErrorMessage.class),
@@ -47,6 +47,25 @@ public class DiagnosticoController {
             diagnosticos = Collections.singletonList(diagnosticoService.getDiagnostico(UUID.fromString(idDiagnostico)));
         }
         return ResponseEntity.ok(diagnosticos);
+    }
+
+    @ApiOperation(value = "Obtener un diagnostico por su ID", notes="Provee un mecanismo para obtener los datos del diagnóstico del paciente por su ID de atención")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message="OK", response = Diagnostico.class),
+            @ApiResponse(code=404, message="Not Found", response = ErrorMessage.class),
+            @ApiResponse(code=500, message="Internal Server Error", response = ErrorMessage.class)
+    })
+    @GetMapping("/atencionid/")
+    public ResponseEntity<Diagnostico> getDiagnosticoByAtencionId(@RequestParam(name = "atencionid") String atencionId){
+
+        Diagnostico diagnostico = diagnosticoService.getDiagnosticoByAtencionId(UUID.fromString(atencionId));
+
+        if (diagnostico != null){
+            return ResponseEntity.ok(diagnostico);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @PostMapping

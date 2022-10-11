@@ -25,6 +25,11 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
     }
 
     @Override
+    public Diagnostico getDiagnosticoByAtencionId(UUID atencionId) {
+        return diagnosticoRepository.findDiagnosticoByAtencionId(atencionId);
+    }
+
+    @Override
     public Diagnostico createDiagnostico(Diagnostico diagnostico) {
         //Aquí irian las validaciones al crear el diagnostico de ser necesario
         return diagnosticoRepository.save(diagnostico);

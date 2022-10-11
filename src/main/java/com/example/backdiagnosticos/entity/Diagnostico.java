@@ -39,22 +39,21 @@ public class Diagnostico  implements Serializable {
     private UUID id;
 
     @ApiModelProperty(value="Es la fecha de registro del diagnostico del paciente", dataType="datetime", position=2)
-    @NotEmpty(message = "El fecregistro no puede ser vacio")
-    @NotNull(message = "El fecregistro no puede ser nulo")
+    @NotNull(message = "La fecha de registro no puede ser nula")
     @Column("fecregistro")
     @CassandraType(type = CassandraType.Name.TIMESTAMP)
-    private String fecregistro;
+    private Date fecregistro;
 
     @ApiModelProperty(value="Es la descripcion del diagnostico del paciente", dataType="ascii", position=3)
     @NotEmpty(message = "La descripcion no puede ser vacio")
-    @NotNull(message = "La descripcion no puede ser nulo")
+    @NotNull(message = "La descripcion no puede ser nula")
     @Column("descripcion")
     @CassandraType(type = CassandraType.Name.ASCII)
     private String descripcion;
 
     @ApiModelProperty(value="Es el estado del diagnostico del paciente", dataType="text",example="en proceso", position=4)
-    @NotEmpty(message = "La estado no puede ser vacio")
-    @NotNull(message = "La estado no puede ser nulo")
+    @NotEmpty(message = "El estado no puede ser vacio")
+    @NotNull(message = "El estado no puede ser nulo")
     @Column( "estado")
     @CassandraType(type = CassandraType.Name.TEXT)
     private String estado;
@@ -65,6 +64,13 @@ public class Diagnostico  implements Serializable {
     @Column("tipo")
     @CassandraType(type = CassandraType.Name.ASCII)
     private String tipo;
+
+    @ApiModelProperty(value="Es el ID de la atencion", dataType="uuid", position=6)
+    @NotNull(message = "El ID de la atencion no puede ser nulo")
+    @Column("atencionid")
+    @CassandraType(type = CassandraType.Name.UUID)
+    private UUID atencionId;
+
 /*
     @ManyToMany
     Set<Prueba> pruebas;
