@@ -1,5 +1,6 @@
 package com.example.backdiagnosticos.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -44,6 +45,7 @@ public class Diagnostico implements Serializable {
     @NotNull(message = "La fecha de registro no puede ser nula")
     @Column("fecregistro")
     @CassandraType(type = CassandraType.Name.DATE)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate fecregistro;
 
     @ApiModelProperty(value = "Es la descripcion del diagnostico del paciente", dataType = "ascii", position = 3)
