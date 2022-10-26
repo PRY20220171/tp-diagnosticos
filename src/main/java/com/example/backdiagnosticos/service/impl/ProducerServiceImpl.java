@@ -22,19 +22,20 @@ public class ProducerServiceImpl implements ProducerService {
     private DirectExchange exchange;
     @Value("${spring.rabbitmq.routingkey}")
     private String routingkey;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public Object sendMsg(String idObj) {
-        try{
-            Object response = amqpTemplate.convertSendAndReceive(exchange.getName(), routingkey, idObj);
-            if(response!=null){
-                return objectMapper.readValue(response.toString(), Diagnostico.class);
-            }
-            else{
+    public String sendMsg(String idObj, String exchangeName) {
+        try {
+            Object response = amqpTemplate.convertSendAndReceive(exchangeName, routingkey, idObj);
+            if (response != null) {
+                //return objectMapper.readValue(response.toString(), Diagnostico.class);
+                return response.toString();
+            } else {
                 return null;
             }
         } catch (Exception e) {
+            System.out.println(e.toString());
             return null;
         }
     }

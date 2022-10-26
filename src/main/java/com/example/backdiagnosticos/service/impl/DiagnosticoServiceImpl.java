@@ -1,8 +1,13 @@
 package com.example.backdiagnosticos.service.impl;
 
 import com.example.backdiagnosticos.entity.Diagnostico;
+import com.example.backdiagnosticos.entity.Prueba;
+import com.example.backdiagnosticos.entity.Resultado;
 import com.example.backdiagnosticos.repository.DiagnosticoRepository;
 import com.example.backdiagnosticos.service.DiagnosticoService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +19,9 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
     @Autowired
     private DiagnosticoRepository diagnosticoRepository;
 
+    @Autowired
+    private ProducerServiceImpl producerService;
+
     @Override
     public List<Diagnostico> findDiagnosticoAll() {
         return (List<Diagnostico>) diagnosticoRepository.findAll();
@@ -21,7 +29,53 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
 
     @Override
     public Diagnostico getDiagnostico(UUID id) {
-        return diagnosticoRepository.findById(id).orElse(null);
+
+        Diagnostico diagnosticoDB = diagnosticoRepository.findById(id).orElse(null);
+
+        if (diagnosticoDB == null){
+            return null;
+        }
+
+        String pruebaDB = producerService.sendMsg(diagnosticoDB.getPruebaId().toString(), "pruebas.rpc");
+
+        if (pruebaDB == null){
+            return null;
+        }
+
+        System.out.println(pruebaDB);
+
+        try {
+            ObjectMapper mapper = JsonMapper.builder()
+                    .addModule(new JavaTimeModule())
+                    .build();
+            Prueba prueba = mapper.readValue(pruebaDB, Prueba.class);
+            diagnosticoDB.setPrueba(prueba);
+        } catch (Exception e){
+            System.out.println(e.toString());
+            return null;
+        }
+
+        String resultadoDB = producerService.sendMsg(diagnosticoDB.getResultadoId().toString(), "resultados.rpc");
+
+        if (resultadoDB == null){
+            return null;
+        }
+
+        System.out.println(resultadoDB);
+
+        try {
+            ObjectMapper mapper = JsonMapper.builder()
+                    .addModule(new JavaTimeModule())
+                    .build();
+            Resultado resultado = mapper.readValue(resultadoDB, Resultado.class);
+            diagnosticoDB.setResultado(resultado);
+        } catch (Exception e){
+            System.out.println(e.toString());
+            return null;
+        }
+
+        return diagnosticoDB;
+
     }
 
     @Override

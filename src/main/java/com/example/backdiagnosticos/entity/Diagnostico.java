@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
@@ -45,7 +46,6 @@ public class Diagnostico implements Serializable {
     @NotNull(message = "La fecha de registro no puede ser nula")
     @Column("fecregistro")
     @CassandraType(type = CassandraType.Name.DATE)
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate fecregistro;
 
     @ApiModelProperty(value = "Es la descripcion del diagnostico del paciente", dataType = "ascii", position = 3)
@@ -74,6 +74,22 @@ public class Diagnostico implements Serializable {
     @Column("atencionid")
     @CassandraType(type = CassandraType.Name.UUID)
     private UUID atencionId;
+
+    @ApiModelProperty(value = "Es el ID del resultado", dataType = "uuid", position = 6)
+    @NotNull(message = "El ID del resultado no puede ser nulo")
+    @Column("resultadoId")
+    @CassandraType(type = CassandraType.Name.UUID)
+    private UUID resultadoId;
+    @Transient
+    private Resultado resultado;
+
+    @ApiModelProperty(value = "Es el ID de la prueba", dataType = "uuid", position = 6)
+    @NotNull(message = "El ID de la prueba no puede ser nulo")
+    @Column("pruebaId")
+    @CassandraType(type = CassandraType.Name.UUID)
+    private UUID pruebaId;
+    @Transient
+    private Prueba prueba;
 
 /*
     @ManyToMany
