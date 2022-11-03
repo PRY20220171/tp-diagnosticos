@@ -75,22 +75,6 @@ public class Diagnostico implements Serializable {
     @CassandraType(type = CassandraType.Name.UUID)
     private UUID atencionId;
 
-    @ApiModelProperty(value = "Es el ID del resultado", dataType = "uuid", position = 6)
-    @NotNull(message = "El ID del resultado no puede ser nulo")
-    @Column("resultadoId")
-    @CassandraType(type = CassandraType.Name.UUID)
-    private UUID resultadoId;
-    @Transient
-    private Resultado resultado;
-
-    @ApiModelProperty(value = "Es el ID de la prueba", dataType = "uuid", position = 6)
-    @NotNull(message = "El ID de la prueba no puede ser nulo")
-    @Column("pruebaId")
-    @CassandraType(type = CassandraType.Name.UUID)
-    private UUID pruebaId;
-    @Transient
-    private Prueba prueba;
-
 /*
     @ManyToMany
     Set<Prueba> pruebas;

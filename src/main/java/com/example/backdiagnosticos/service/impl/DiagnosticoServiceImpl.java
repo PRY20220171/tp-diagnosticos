@@ -36,7 +36,7 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
             return null;
         }
 
-        String pruebaDB = producerService.sendMsg(diagnosticoDB.getPruebaId().toString(), "pruebas.rpc");
+        /*String pruebaDB = producerService.sendMsg(diagnosticoDB.getPruebaId().toString(), "pruebas.rpc");
 
         if (pruebaDB == null){
             return null;
@@ -72,7 +72,7 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
         } catch (Exception e){
             System.out.println(e.toString());
             return null;
-        }
+        }*/
 
         return diagnosticoDB;
 
